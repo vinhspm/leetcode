@@ -24,20 +24,23 @@ var findSubstring = function (s, words) {
         wordsMap.set(words[j], (wordsMap.get(words[j]) || 0) + 1);
     }
 
-    for (let i = 0; i < s.length - totalLength; i++) {
-        let left = i;
-        let right = i;
+    for (let i = 0; i <= s.length - totalLength; i++) {
+        let currentMap = new Map(wordsMap);
+        let currentSubString = s.substring(i, i + totalLength);
+        let matchedWordsCount = 0;
 
-        while (right < i + totalLength) {
-            let currentWord = s.substring(right, right + wordLength);
-            right += wordLength;
-
-            if (wordsMap.has(currentWord)) {
-                wordsMap.set(currentWord, wordsMap.get(currentWord) - 1);
+        for (let j = 0; j < totalLength; j += wordLength) {
+            let currentWord = currentSubString.substring(j, j + wordLength);
+            if (currentMap.has(currentWord) && currentMap.get(currentWord) > 0) {
+                currentMap.set(currentWord, currentMap.get(currentWord) - 1);
+                matchedWordsCount++;
             } else {
                 break;
             }
+        }
 
+        if (matchedWordsCount === wordsLength) {
+            result.push(i);
         }
     }
 
